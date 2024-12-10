@@ -2,7 +2,42 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
+--
+local dash_header = [[
+███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ 
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ 
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ 
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ 
+███████╗ ██████╗     ██╗████████╗    ██╗███████╗   
+██╔════╝██╔═══██╗    ██║╚══██╔══╝    ██║██╔════╝   
+███████╗██║   ██║    ██║   ██║       ██║███████╗   
+╚════██║██║   ██║    ██║   ██║       ██║╚════██║   
+███████║╚██████╔╝    ██║   ██║       ██║███████║██╗
+╚══════╝ ╚═════╝     ╚═╝   ╚═╝       ╚═╝╚══════╝╚═╝]]
+
 return {
+  {
+    'VonHeikemen/fine-cmdline.nvim',
+    opts = {},
+    dependencies = {
+      {
+        'MunifTanjim/nui.nvim',
+        lazy = true,
+      },
+    },
+    cmdline = {
+      smart_history = true,
+      prompt = '>_ ',
+    },
+    popup = {
+      position = '50%',
+      size = {
+        width = '60%',
+      },
+    },
+  },
   -- {
   --   'goolord/alpha-nvim',
   --   lazy = true,
@@ -18,36 +53,37 @@ return {
     opts = {},
   }, -- better ui
   {
-    'VonHeikemen/fine-cmdline.nvim',
-    lazy = false,
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {
+      direction = 'float',
+      float_opts = {
+        -- The border key is *almost* the same as 'nvim_open_win'
+        -- see :h nvim_open_win for details on borders however
+        -- the 'curved' border is a custom border type
+        -- not natively supported but implemented in this plugin.
+        border = 'curved',
+        -- like `size`, width, height, row, and col can be a number or function which is passed the current terminal
+        -- width = '70%',
+        -- height = '70%',
+        winblend = 2,
+        title_pos = 'center',
+      },
+    },
   },
-  {
-    'MunifTanjim/nui.nvim',
-    lazy = false,
-  },
+  { 'tiagovla/scope.nvim' },
   {
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
+    ---@diagnostic disable-next-line: undefined-doc-name
     ---@type snacks.Config
     opts = {
       bigfile = { enabled = true },
       dashboard = {
         enabled = true,
         preset = {
-          header = [[
-███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
-████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ 
-██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ 
-██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
-██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ 
-╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ 
-███████╗ ██████╗     ██╗████████╗    ██╗███████╗   
-██╔════╝██╔═══██╗    ██║╚══██╔══╝    ██║██╔════╝   
-███████╗██║   ██║    ██║   ██║       ██║███████╗   
-╚════██║██║   ██║    ██║   ██║       ██║╚════██║   
-███████║╚██████╔╝    ██║   ██║       ██║███████║██╗
-╚══════╝ ╚═════╝     ╚═╝   ╚═╝       ╚═╝╚══════╝╚═╝]],
+          header = dash_header,
         },
       },
       notifier = {

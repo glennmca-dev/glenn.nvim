@@ -45,7 +45,9 @@ return {
   -- nvimtree
   map('n', '<C-n>', '<cmd>NvimTreeToggle<CR>', { desc = 'nvimtree toggle window' }),
   map('n', '<leader>e', '<cmd>NvimTreeFocus<CR>', { desc = 'nvimtree focus window' }),
-  map('n', ':', '<cmd>FineCmdline<CR>', { noremap = true }),
+
+  -- cmd line
+  -- map('n', ':', '<cmd>FineCmdline<CR>', { noremap = true }), -- Leaving this out so the OG command still works
   map('n', ';', '<cmd>FineCmdline<CR>', { noremap = true }),
 
   -- telescope
@@ -82,9 +84,7 @@ return {
   --   require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
   -- end, { desc = "terminal toggleable horizontal term" })
   --
-  -- map({ "n", "t" }, "<A-i>", function()
-  --   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-  -- end, { desc = "terminal toggle floating term" })
+  map({ 'n', 't' }, '<A-i>', '<cmd>ToggleTerm<CR>', { desc = 'Open/Toggle floating terminal' }),
   --
   -- whichkey
   -- map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
