@@ -65,10 +65,25 @@ return {
     opts = {},
   }, -- better ui
   {
+    'akinsho/bufferline.nvim',
+    version = 'v4.9.0',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    lazy = false,
+    opts = {
+      -- color_icons = true,
+      -- hover = {
+      -- enabled = true,
+      -- delay = 200,
+      -- reveal = { 'close' },
+      -- },
+    },
+  },
+  {
     'akinsho/toggleterm.nvim',
-    version = '*',
+    version = 'latest',
     opts = {
       direction = 'float',
+      size = 10,
       float_opts = {
         -- The border key is *almost* the same as 'nvim_open_win'
         -- see :h nvim_open_win for details on borders however
@@ -76,9 +91,9 @@ return {
         -- not natively supported but implemented in this plugin.
         border = 'curved',
         -- like `size`, width, height, row, and col can be a number or function which is passed the current terminal
-        -- width = '70%',
-        -- height = '70%',
-        winblend = 2,
+        width = 200,
+        height = 40,
+        winblend = 4,
         title_pos = 'center',
       },
     },
