@@ -20,21 +20,33 @@ local dash_header = [[
 return {
   {
     'VonHeikemen/fine-cmdline.nvim',
-    opts = {},
     dependencies = {
       {
         'MunifTanjim/nui.nvim',
         lazy = true,
       },
     },
-    cmdline = {
-      smart_history = true,
-      prompt = '>_ ',
-    },
-    popup = {
-      position = '50%',
-      size = {
-        width = '60%',
+    opts = {
+      cmdline = {
+        prompt = '>_ ',
+        smart_history = true,
+      },
+      popup = {
+        position = {
+          row = '50%',
+          col = '50%',
+        },
+        border = {
+          padding = { 1, 2 },
+          style = 'rounded',
+          text = {
+            top = '< Neovim Command >',
+            top_align = 'center',
+          },
+        },
+        win_options = {
+          winblend = 10,
+        },
       },
     },
   },
@@ -71,7 +83,10 @@ return {
       },
     },
   },
-  { 'tiagovla/scope.nvim' },
+  -- {
+  -- 'tiagovla/scope.nvim',
+  -- opts = {},
+  -- },
   {
     'folke/snacks.nvim',
     priority = 1000,
