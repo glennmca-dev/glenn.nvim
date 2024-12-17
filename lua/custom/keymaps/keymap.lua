@@ -94,9 +94,10 @@ return {
   -- end, { desc = "whichkey query lookup" })
 
   -- bufferline
-  map('n', '<leader>x', '<cmd>lua delete_current_buffer()<CR>', { noremap = true, silent = true }),
   map('n', '<leader>x', function()
     local bufnr = vim.api.nvim_get_current_buf() -- Get current buffer number
     vim.cmd('bdelete!' .. bufnr)
   end, { noremap = true, silent = true }),
+  map('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { noremap = true, silent = true }),
+  map('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { noremap = true, silent = true }),
 }

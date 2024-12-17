@@ -19,6 +19,10 @@ local dash_header = [[
 
 return {
   {
+    'nvim-java/nvim-java',
+    lazy = true,
+  },
+  {
     'VonHeikemen/fine-cmdline.nvim',
     dependencies = {
       {
