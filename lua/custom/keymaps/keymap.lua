@@ -1,6 +1,4 @@
 local map = vim.keymap.set
-local builtin = require 'fzf-lua'
-
 return {
 
   -- map('n', '<leader>e', '<Cmd>NvimTreeFocus<CR>', { desc = 'Nvim-Tree Focus' })
@@ -53,12 +51,11 @@ return {
   map('n', ';', '<cmd>FineCmdline<CR>', { noremap = true }),
 
   -- telescope
-  map('n', '<leader>fw', '<cmd>FzfLua live_grep<CR>', { desc = 'fzf live grep' }),
-  map('n', '<leader>fb', '<cmd>FzfLua buffers<CR>', { desc = 'fzf find buffers' }),
-  map('n', '<leader>ff', '<cmd>FzfLua files<cr>', { desc = 'fzf find files' }),
-  map('n', '<leader>fz', '<cmd>FzfLua current_buffer_fuzzy_find<CR>', { desc = 'fzf find in current buffer' }),
-  map('n', '<leader>fa', '<cmd>FzfLua files follow=true no_ignore=true hidden=true<CR>', { desc = 'fzf find all files' }),
-  map('n', '<leader>sc', '<cmd>FzfLua colorschemes<CR>', { desc = 'fzf [S]earch installed [C]olourschemes' }),
+  map('n', '<leader>fw', '<cmd>Telescope live_grep<CR>', { desc = 'telescope live grep' }),
+  map('n', '<leader>fb', '<cmd>Telescope buffers<CR>', { desc = 'telescope find buffers' }),
+  map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'telescope find files' }),
+  map('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>', { desc = 'telescope find in current buffer' }),
+  map('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>', { desc = 'telescope find all files' }),
   -- map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
   -- map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
   -- map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
@@ -103,40 +100,4 @@ return {
   end, { noremap = true, silent = true }),
   map('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { noremap = true, silent = true }),
   map('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { noremap = true, silent = true }),
-
-  -- FZF lua
-  -- See `:help telescope.builtin`
-  vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' }),
-  vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' }),
-  vim.keymap.set('n', '<leader>sf', builtin.files, { desc = '[S]earch [F]iles' }),
-  vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' }),
-  vim.keymap.set('n', '<leader>sw', builtin.grep_cword, { desc = '[S]earch current [W]ord' }),
-  vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' }),
-  vim.keymap.set('n', '<leader>sd', builtin.diagnostics_document, { desc = '[S]earch [D]iagnostics' }),
-  vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' }),
-  vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' }),
-  vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' }),
-
-  -- Slightly advanced example of overriding default behavior and theme
-  -- vim.keymap.set('n', '<leader>/', function()
-  --   -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-  --   builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-  --     winblend = 10,
-  --     previewer = false,
-  --   })
-  -- end, { desc = '[/] Fuzzily search in current buffer' })
-
-  -- It's also possible to pass additional configuration options.
-  --  See `:help telescope.builtin.live_grep()` for information about particular keys
-  --     vim.keymap.set('n', '<leader>s/', function()
-  --       builtin.live_grep {
-  --         grep_open_files = true,
-  --         prompt_title = 'Live Grep in Open Files',
-  --       }
-  --     end, { desc = '[S]earch [/] in Open Files' })
-  --
-  --     -- Shortcut for searching your Neovim configuration files
-  --     vim.keymap.set('n', '<leader>sn', function()
-  --       builtin.find_files { cwd = vim.fn.stdpath 'config' }
-  --     end, { desc = '[S]earch [N]eovim files' })
 }
