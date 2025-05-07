@@ -106,6 +106,7 @@ return {
   -- 'tiagovla/scope.nvim',
   -- opts = {},
   -- },
+  { 'github/copilot.vim' },
   {
     'folke/snacks.nvim',
     priority = 1000,

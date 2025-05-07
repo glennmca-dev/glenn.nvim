@@ -642,6 +642,11 @@ require('lazy').setup({
                   },
                 },
               },
+              format = {
+                settings = {
+                  url = '~/rapid7/assessment-service/GoogleStyle.xml',
+                },
+              },
             },
           },
         },
@@ -845,8 +850,8 @@ require('lazy').setup({
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
           ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          -- ['<Tab>'] = cmp.mapping.select_next_item(),
+          -- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -981,6 +986,17 @@ require('lazy').setup({
       statusline.section_location = function()
         return '%2l:%-2v'
       end
+
+      -- Smooth scrolling animation
+      local animate = require 'mini.animate'
+      animate.setup {
+        cursor = {
+          timing = animate.gen_timing.linear { duration = 150, unit = 'total' },
+        },
+      }
+
+      require('mini.map').setup()
+      vim.keymap.set('n', '<leader>mm', '<cmd>MiniMap.toggle()<CR>', { desc = 'Toggle [M]iniMap' })
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
