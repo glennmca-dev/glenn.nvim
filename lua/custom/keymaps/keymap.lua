@@ -56,8 +56,11 @@ return {
   map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'telescope find files' }),
   map('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>', { desc = 'telescope find in current buffer' }),
   map('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>', { desc = 'telescope find all files' }),
-  -- map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
-  -- map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+  map('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'telescope help page' }),
+  map('n', '<leader>ma', '<cmd>Telescope marks<CR>', { desc = 'telescope find marks' }),
+
+  -- Window navigation/management
+  map('n', '<A-w>', '<C-w>w', { desc = 'cycle between windows (Option+w)', noremap = true }),
   -- map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
   -- map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
   -- map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })

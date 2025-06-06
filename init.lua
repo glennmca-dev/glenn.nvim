@@ -381,12 +381,25 @@ require('lazy').setup({
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          -- mappings = {
+          --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          -- },
+          layout_config = {
+            horizontal = {
+              prompt_position = 'bottom',
+              preview_width = 0.6, -- Make preview wider (60% of window)
+              results_width = 0.4, -- Make results narrower (40% of window)
+            },
+            vertical = {
+              mirror = false,
+            },
+            width = 0.85, -- Slightly narrower window
+            height = 0.80, -- Slightly shorter window
+            preview_cutoff = 120,
+          },
+          sorting_strategy = 'ascending', -- Display results below the prompt
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -630,7 +643,7 @@ require('lazy').setup({
                 runtimes = {
                   {
                     name = 'ASDF Java',
-                    path = '/Users/gmcallister/.asdf/shims/java',
+                    path = '~/.asdf/shims/java',
                     default = true,
                   },
                 },
