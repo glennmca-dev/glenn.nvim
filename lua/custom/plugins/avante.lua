@@ -3,19 +3,24 @@ return {
   event = 'VeryLazy',
   version = false, -- Never set this value to "*"! Never!
   opts = {
-    provider = 'copilot',
-    copilot = {
-      model = 'claude-3.7-sonnet',
-      temperature = 0.3, -- More balanced temperature for accuracy while maintaining some creativity
-      max_tokens = 200000, -- Increased token limit for larger context window
-      stream = true, -- Keep streaming enabled for real-time responses
-      top_p = 0.9, -- Slightly reduced to favor more precise outputs
-      top_k = 40, -- Adding top_k to focus on more likely tokens
-      context_window = 150000, -- Explicitly set a large context window
-      timeout = 60000, -- Increased timeout for complex reasoning tasks (ms)
-      reasoning_mode = 'deep', -- Encourage more thorough analysis
-      max_completion_tokens = 64000, -- Control output length while allowing for detailed responses
+    providers = {
+      copilot = {
+        model = 'claude-3.7-sonnet',
+        stream = true, -- Keep streaming enabled for real-time responses
+        top_p = 0.9, -- Slightly reduced to favor more precise outputs
+        top_k = 40, -- Adding top_k to focus on more likely tokens
+        context_window = 150000, -- Explicitly set a large context window
+        timeout = 60000, -- Increased timeout for complex reasoning tasks (ms)
+        reasoning_mode = 'deep', -- Encourage more thorough analysis
+        max_completion_tokens = 64000, -- Control output length while allowing for detailed responses
+        extra_request_body = {
+          temperature = 0.3, -- More balanced temperature for accuracy while maintaining some creativity
+          max_tokens = 200000, -- Increased token limit for larger context window
+        },
+      },
     },
+    provider = 'copilot',
+
     -- Enable features that help with code accuracy
     enable_file_cache = true, -- Cache previously processed files for faster context building
     file_cache_size_mb = 500, -- Increased cache size for larger projects

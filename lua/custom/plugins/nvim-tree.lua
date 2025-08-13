@@ -15,6 +15,7 @@ return {
     require('nvim-tree').setup {
       filters = {
         custom = { '^.git$', '^.github$' },
+        dotfiles = false,
       },
       renderer = {
         indent_width = 1,

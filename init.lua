@@ -400,7 +400,11 @@ require('lazy').setup({
           },
           sorting_strategy = 'ascending', -- Display results below the prompt
         },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
