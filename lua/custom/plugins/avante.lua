@@ -5,7 +5,7 @@ return {
   opts = {
     providers = {
       copilot = {
-        model = 'claude-4-sonnet',
+        model = 'claude-sonnet-4',
         stream = true, -- Keep streaming enabled for real-time responses
         top_p = 0.9, -- Slightly reduced to favor more precise outputs
         top_k = 40, -- Adding top_k to focus on more likely tokens
