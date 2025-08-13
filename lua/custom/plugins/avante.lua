@@ -5,7 +5,7 @@ return {
   opts = {
     providers = {
       copilot = {
-        model = 'claude-3.7-sonnet',
+        model = 'claude-4-sonnet',
         stream = true, -- Keep streaming enabled for real-time responses
         top_p = 0.9, -- Slightly reduced to favor more precise outputs
         top_k = 40, -- Adding top_k to focus on more likely tokens
@@ -28,6 +28,17 @@ return {
     watch_files = true,
     -- More aggressive context strategy to improve coding accuracy
     context_strategy = 'comprehensive',
+
+    -- UI sizes for Avante windows
+    windows = {
+      -- Controls the height of the prompt input area at the bottom of the Avante sidebar
+      input = {
+        height = 16, -- increase from default (6) to open with more lines
+      },
+      -- You can also control the sidebar width/height if desired:
+      -- width = 30,  -- percentage in vertical layout
+      -- height = 30, -- percentage in horizontal layout
+    },
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = 'make',

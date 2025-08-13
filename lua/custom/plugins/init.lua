@@ -20,8 +20,35 @@ local dash_header = [[
 return {
   {
     'nvim-java/nvim-java',
-    lazy = true,
+    ft = 'java',
+    dependencies = {
+      'williamboman/mason.nvim',
+    },
+    config = function()
+      -- Ensure mason is initialized before nvim-java tries to query packages
+      vim.schedule(function()
+        pcall(require, 'mason')
+        local ok, java = pcall(require, 'java')
+        if ok and type(java.setup) == 'function' then
+          -- Disable DAP in nvim-java config, but keep module available
+          pcall(java.setup, {
+            java_debug_adapter = { enable = false },
+            notifications = { dap = false },
+          })
+          -- No-op DAP hooks to avoid touching nvim-dap
+          local ok_dap_api, dap_api = pcall(require, 'java.api.dap')
+          if ok_dap_api and type(dap_api) == 'table' then
+            dap_api.setup_dap_on_lsp_attach = function() end
+            dap_api.config_dap = function() end
+            -- Remove any autocmd group that may have been created before override
+            pcall(vim.api.nvim_del_augroup_by_name, 'nvim-java-dap-config')
+          end
+        end
+      end)
+    end,
   },
+  -- Keep the module present to satisfy nvim-java's requires, but we disable its usage above
+  { 'nvim-java/nvim-java-dap' },
   {
     'VonHeikemen/fine-cmdline.nvim',
     dependencies = {
@@ -282,15 +309,50 @@ return {
           vim.print = _G.dd -- Override print to use snacks for `:=` command
 
           -- Create some toggle mappings
-          Snacks.toggle.option('spell', { name = 'Spelling' }):map '<leader>us'
-          Snacks.toggle.option('wrap', { name = 'Wrap' }):map '<leader>uw'
-          Snacks.toggle.option('relativenumber', { name = 'Relative Number' }):map '<leader>uL'
-          Snacks.toggle.diagnostics():map '<leader>ud'
-          Snacks.toggle.line_number():map '<leader>ul'
-          Snacks.toggle.option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map '<leader>uc'
-          Snacks.toggle.treesitter():map '<leader>uT'
-          Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map '<leader>ub'
-          Snacks.toggle.inlay_hints():map '<leader>uh'
+          local t_spell = Snacks.toggle.option('spell', { name = 'Spelling' })
+          vim.keymap.set('n', '<leader>us', function()
+            t_spell:toggle()
+          end, { desc = 'Toggle Spelling' })
+
+          local t_wrap = Snacks.toggle.option('wrap', { name = 'Wrap' })
+          vim.keymap.set('n', '<leader>uw', function()
+            t_wrap:toggle()
+          end, { desc = 'Toggle Wrap' })
+
+          local t_rnu = Snacks.toggle.option('relativenumber', { name = 'Relative Number' })
+          vim.keymap.set('n', '<leader>uL', function()
+            t_rnu:toggle()
+          end, { desc = 'Toggle Relative Number' })
+
+          local t_diag = Snacks.toggle.diagnostics()
+          vim.keymap.set('n', '<leader>ud', function()
+            t_diag:toggle()
+          end, { desc = 'Toggle Diagnostics' })
+
+          local t_lnum = Snacks.toggle.line_number()
+          vim.keymap.set('n', '<leader>ul', function()
+            t_lnum:toggle()
+          end, { desc = 'Toggle Line Number' })
+
+          local t_conceal = Snacks.toggle.option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+          vim.keymap.set('n', '<leader>uc', function()
+            t_conceal:toggle()
+          end, { desc = 'Toggle Conceal' })
+
+          local t_ts = Snacks.toggle.treesitter()
+          vim.keymap.set('n', '<leader>uT', function()
+            t_ts:toggle()
+          end, { desc = 'Toggle Treesitter' })
+
+          local t_bg = Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' })
+          vim.keymap.set('n', '<leader>ub', function()
+            t_bg:toggle()
+          end, { desc = 'Toggle Dark Background' })
+
+          local t_inlay = Snacks.toggle.inlay_hints()
+          vim.keymap.set('n', '<leader>uh', function()
+            t_inlay:toggle()
+          end, { desc = 'Toggle Inlay Hints' })
         end,
       })
     end,

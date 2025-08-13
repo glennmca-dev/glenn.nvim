@@ -321,6 +321,9 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+  { '<leader>f', group = '[F]ind (Telescope)' },
+  { '<leader>m', group = '[M]ap / MiniMap' },
+  { '<leader>u', group = '[U]I Toggles' },
       },
     },
   },
@@ -556,6 +559,15 @@ require('lazy').setup({
           --  Most Language Servers support renaming across files, etc.
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
+          -- Show hover documentation in a small floating window near the cursor
+          map('K', function() 
+            vim.lsp.buf.hover({
+              border = 'rounded',
+              max_width = 240,
+              max_height = 60,
+            })
+          end, '[K]eyword Hover')
+
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
@@ -637,34 +649,15 @@ require('lazy').setup({
         pyright = {},
         angularls = {},
         bashls = {},
-        dockerls = {},
-        docker_compose_language_service = {},
-        groovyls = {},
-        jdtls = {
-          settings = {
-            java = {
-              configuration = {
-                runtimes = {
-                  {
-                    name = 'ASDF Java',
-                    path = '~/.asdf/shims/java',
-                    default = true,
-                  },
-                },
-              },
-              format = {
-                settings = {
-                  url = '~/rapid7/assessment-service/GoogleStyle.xml',
-                },
-              },
-            },
-          },
-        },
-        jsonls = {},
-        markdown_oxide = {},
-        terraformls = {},
-        ts_ls = {},
-        yamlls = {},
+  dockerls = {},
+  docker_compose_language_service = {},
+  groovyls = {},
+  jsonls = {},
+  -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
+  marksman = {},
+  terraformls = {},
+  ts_ls = {},
+  yamlls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -701,13 +694,20 @@ require('lazy').setup({
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      -- Filter only servers that Mason knows about to avoid version/registry mismatches
+      local mlsp = require 'mason-lspconfig'
+      local available = mlsp.get_available_servers()
+      local ensure_installed = {}
+      for name, _ in pairs(servers or {}) do
+        if vim.tbl_contains(available, name) then
+          table.insert(ensure_installed, name)
+        end
+      end
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('java').setup()
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -1002,7 +1002,9 @@ require('lazy').setup({
       }
 
       require('mini.map').setup()
-      vim.keymap.set('n', '<leader>mm', '<cmd>MiniMap.toggle()<CR>', { desc = 'Toggle [M]iniMap' })
+      vim.keymap.set('n', '<leader>mm', function()
+        require('mini.map').toggle()
+      end, { desc = 'Toggle [M]iniMap' })
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -1014,7 +1016,12 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        -- common extras
+        'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'dockerfile', 'git_rebase', 'gitcommit', 'regex',
+        'java', 'go', 'groovy', 'terraform',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
