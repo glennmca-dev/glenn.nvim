@@ -16,9 +16,11 @@ return {
       filters = {
         custom = { '^.git$', '^.github$' },
         dotfiles = false,
+        git_ignored = false,
       },
       renderer = {
         indent_width = 1,
+        group_empty = true,
       },
       hijack_cursor = true,
       disable_netrw = true,
