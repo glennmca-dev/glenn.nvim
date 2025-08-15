@@ -14,23 +14,61 @@ return {
   config = function()
     require('nvim-tree').setup {
       filters = {
-        custom = { '^.git$', '^.github$' },
+        custom = { '^.git$', '^.github$', 'node_modules', '.DS_Store' },
         dotfiles = false,
         git_ignored = false,
       },
-      renderer = {
-        indent_width = 1,
-        group_empty = true,
+      live_filter = {
+        prefix = '[FILTER] ',
+        always_show_folders = true,
       },
+  renderer = {
+        indent_width = 2,
+        group_empty = true,
+        indent_markers = { enable = true },
+        highlight_opened_files = 'name',
+        root_folder_label = ':t',
+        icons = {
+          git_placement = 'signcolumn',
+        },
+      },
+  modified = { enable = true, show_on_dirs = true, show_on_open_dirs = true },
       hijack_cursor = true,
       disable_netrw = true,
       hijack_netrw = true,
       respect_buf_cwd = true,
       sync_root_with_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = true,
+      },
+      diagnostics = {
+        enable = true,
+        show_on_dirs = true,
+      },
+      git = {
+        enable = true,
+        show_on_dirs = true,
+        timeout = 400,
+      },
+      filesystem_watchers = {
+        enable = true,
+        debounce_delay = 50,
+      },
+      sort_by = 'case_sensitive',
+      actions = {
+        open_file = {
+          quit_on_open = true,
+          window_picker = {
+            chars = '123456789',
+          },
+        },
+      },
       view = {
         relativenumber = true,
         float = {
           enable = true,
+          quit_on_focus_loss = true,
           open_win_config = function()
             local screen_w = vim.opt.columns:get()
             local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()

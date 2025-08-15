@@ -44,6 +44,12 @@ return {
       end, { noremap = true, silent = true, desc = 'delete buffer' })
       map('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { noremap = true, silent = true, desc = 'next buffer' })
       map('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { noremap = true, silent = true, desc = 'prev buffer' })
+
+      -- Diagnostics: show current line message in a float
+      map('n', '<leader>cd', function()
+        -- scope='line' will prefer diagnostics on the current line; focus=false doesn't steal cursor
+        vim.diagnostic.open_float(nil, { scope = 'line', focus = false, border = 'rounded' })
+      end, { desc = '[C]ode [D]iagnostics (line)' })
     end,
   },
 }
