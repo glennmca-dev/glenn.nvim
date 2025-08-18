@@ -22,17 +22,25 @@ return {
         prefix = '[FILTER] ',
         always_show_folders = true,
       },
-  renderer = {
+      renderer = {
         indent_width = 2,
         group_empty = true,
         indent_markers = { enable = true },
         highlight_opened_files = 'name',
-        root_folder_label = ':t',
+        highlight_git = true,
+        full_name = true, -- Show full file names instead of truncated
+        root_folder_label = ':t', -- Show only directory name, not full path
         icons = {
           git_placement = 'signcolumn',
+          show = {
+            git = true,
+            folder = true,
+            file = true,
+            folder_arrow = true,
+          },
         },
       },
-  modified = { enable = true, show_on_dirs = true, show_on_open_dirs = true },
+      modified = { enable = true, show_on_dirs = true, show_on_open_dirs = true },
       hijack_cursor = true,
       disable_netrw = true,
       hijack_netrw = true,
