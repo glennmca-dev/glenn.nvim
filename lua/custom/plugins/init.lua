@@ -23,28 +23,35 @@ return {
     ft = 'java',
     dependencies = {
       'williamboman/mason.nvim',
+      'neovim/nvim-lspconfig',
     },
     config = function()
-      -- Ensure mason is initialized before nvim-java tries to query packages
-      vim.schedule(function()
-        pcall(require, 'mason')
-        local ok, java = pcall(require, 'java')
-        if ok and type(java.setup) == 'function' then
-          -- Disable DAP in nvim-java config, but keep module available
-          pcall(java.setup, {
-            java_debug_adapter = { enable = false },
-            notifications = { dap = false },
-          })
-          -- No-op DAP hooks to avoid touching nvim-dap
-          local ok_dap_api, dap_api = pcall(require, 'java.api.dap')
-          if ok_dap_api and type(dap_api) == 'table' then
-            dap_api.setup_dap_on_lsp_attach = function() end
-            dap_api.config_dap = function() end
-            -- Remove any autocmd group that may have been created before override
-            pcall(vim.api.nvim_del_augroup_by_name, 'nvim-java-dap-config')
-          end
-        end
-      end)
+      -- Setup nvim-java first to ensure proper initialization
+      require('java').setup({
+        -- Lombok is automatically enabled by nvim-java
+        lombok = {
+          -- Use latest nightly version for best compatibility
+          version = 'nightly',
+        },
+        -- Disable automatic JDK installation
+        jdk = {
+          auto_install = false,
+        },
+        java_debug_adapter = { enable = false },
+        notifications = { dap = false },
+      })
+      
+      -- Setup jdtls with sensible defaults (includes Lombok support)
+      require('lspconfig').jdtls.setup({})
+      
+      -- No-op DAP hooks to avoid touching nvim-dap
+      local ok_dap_api, dap_api = pcall(require, 'java.api.dap')
+      if ok_dap_api and type(dap_api) == 'table' then
+        dap_api.setup_dap_on_lsp_attach = function() end
+        dap_api.config_dap = function() end
+        -- Remove any autocmd group that may have been created before override
+        pcall(vim.api.nvim_del_augroup_by_name, 'nvim-java-dap-config')
+      end
     end,
   },
   -- Keep the module present to satisfy nvim-java's requires, but we disable its usage above
