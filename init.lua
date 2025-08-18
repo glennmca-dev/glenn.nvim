@@ -385,6 +385,7 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         defaults = {
+          path_display = { "smart" }, -- Intelligently shortens paths to show more filename
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
@@ -406,6 +407,12 @@ require('lazy').setup({
         pickers = {
           find_files = {
             hidden = true,
+            file_ignore_patterns = {
+              "^%.git/",        -- Ignore .git directory contents
+              "^%.github/",     -- Ignore .github directory contents  
+              "node_modules/",  -- Ignore node_modules
+              "%.DS_Store$",    -- Ignore .DS_Store files
+            },
           },
         },
         extensions = {
