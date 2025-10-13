@@ -6,28 +6,26 @@ return {
     providers = {
       copilot = {
         model = 'claude-sonnet-4',
-        stream = true, -- Keep streaming enabled for real-time responses
-        top_p = 0.9, -- Slightly reduced to favor more precise outputs
-        top_k = 40, -- Adding top_k to focus on more likely tokens
-        context_window = 150000, -- Explicitly set a large context window
-        timeout = 60000, -- Increased timeout for complex reasoning tasks (ms)
-        reasoning_mode = 'deep', -- Encourage more thorough analysis
-        max_completion_tokens = 64000, -- Control output length while allowing for detailed responses
+        stream = true, -- Streaming is fine for UX, doesn't affect token usage
+        top_p = 0.8, -- Lowered for more focused completions
+        top_k = 20, -- Lowered for more focused completions
+        context_window = 4096, -- Dramatically reduced to limit context sent per request
+        timeout = 30000, -- Lowered to default, adjust as needed
+        reasoning_mode = 'deep',
+        max_completion_tokens = 1024, -- Lowered to cap output length
         extra_request_body = {
-          temperature = 0.3, -- More balanced temperature for accuracy while maintaining some creativity
-          max_tokens = 200000, -- Increased token limit for larger context window
+          temperature = 0.2, -- Lowered for more deterministic completions
+          max_tokens = 2048, -- Lowered to cap Claude API output
         },
       },
     },
     provider = 'copilot',
 
     -- Enable features that help with code accuracy
-    enable_file_cache = true, -- Cache previously processed files for faster context building
-    file_cache_size_mb = 500, -- Increased cache size for larger projects
-    -- Auto-refresh context on file changes
-    watch_files = true,
-    -- More aggressive context strategy to improve coding accuracy
-    context_strategy = 'comprehensive',
+    enable_file_cache = true, -- Caching is fine
+    file_cache_size_mb = 50, -- Lowered cache size to reduce context scope
+    watch_files = false, -- Disable to avoid unnecessary context refreshes
+    context_strategy = 'default', -- Less aggressive, reduces context sent
 
     -- UI sizes for Avante windows
     windows = {

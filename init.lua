@@ -90,6 +90,13 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Set autoread to true so that a file buffer will update when it is updated on disk by other tools like sed/other ides
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'CursorHoldI', 'FocusGained' }, {
+  command = "if mode() != 'c' | checktime | endif",
+  pattern = { '*' },
+})
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -321,9 +328,9 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-  { '<leader>f', group = '[F]ind (Telescope)' },
-  { '<leader>m', group = '[M]ap / MiniMap' },
-  { '<leader>u', group = '[U]I Toggles' },
+        { '<leader>f', group = '[F]ind (Telescope)' },
+        { '<leader>m', group = '[M]ap / MiniMap' },
+        { '<leader>u', group = '[U]I Toggles' },
       },
     },
   },
@@ -385,7 +392,7 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         defaults = {
-          path_display = { "smart" }, -- Intelligently shortens paths to show more filename
+          path_display = { 'smart' }, -- Intelligently shortens paths to show more filename
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
@@ -408,10 +415,10 @@ require('lazy').setup({
           find_files = {
             hidden = true,
             file_ignore_patterns = {
-              "^%.git/",        -- Ignore .git directory contents
-              "^%.github/",     -- Ignore .github directory contents  
-              "node_modules/",  -- Ignore node_modules
-              "%.DS_Store$",    -- Ignore .DS_Store files
+              '^%.git/', -- Ignore .git directory contents
+              '^%.github/', -- Ignore .github directory contents
+              'node_modules/', -- Ignore node_modules
+              '%.DS_Store$', -- Ignore .DS_Store files
             },
           },
         },
@@ -567,12 +574,12 @@ require('lazy').setup({
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
           -- Show hover documentation in a small floating window near the cursor
-          map('K', function() 
-            vim.lsp.buf.hover({
+          map('K', function()
+            vim.lsp.buf.hover {
               border = 'rounded',
               max_width = 240,
               max_height = 60,
-            })
+            }
           end, '[K]eyword Hover')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
@@ -656,15 +663,15 @@ require('lazy').setup({
         pyright = {},
         angularls = {},
         bashls = {},
-  dockerls = {},
-  docker_compose_language_service = {},
-  groovyls = {},
-  jsonls = {},
-  -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
-  marksman = {},
-  terraformls = {},
-  ts_ls = {},
-  yamlls = {},
+        dockerls = {},
+        docker_compose_language_service = {},
+        groovyls = {},
+        jsonls = {},
+        -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
+        marksman = {},
+        terraformls = {},
+        ts_ls = {},
+        yamlls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1024,10 +1031,32 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
-        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
         -- common extras
-        'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'dockerfile', 'git_rebase', 'gitcommit', 'regex',
-        'java', 'go', 'groovy', 'terraform',
+        'javascript',
+        'typescript',
+        'tsx',
+        'json',
+        'yaml',
+        'toml',
+        'dockerfile',
+        'git_rebase',
+        'gitcommit',
+        'regex',
+        'java',
+        'go',
+        'groovy',
+        'terraform',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
