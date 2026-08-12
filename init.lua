@@ -200,7 +200,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    -- vim.highlight was renamed to vim.hl in 0.11; the old name is a
+    -- deprecated shim slated for removal.
+    vim.hl.on_yank()
   end,
 })
 
@@ -274,7 +276,7 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
-      preset = 'modern',
+      preset = 'helix',
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
@@ -314,6 +316,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
+        { '<leader>a', group = '[A]I (CodeCompanion)' },
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
@@ -321,9 +324,10 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-  { '<leader>f', group = '[F]ind (Telescope)' },
-  { '<leader>m', group = '[M]ap / MiniMap' },
-  { '<leader>u', group = '[U]I Toggles' },
+        { '<leader>f', group = '[F]ind (Telescope)' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>m', group = '[M]ap / MiniMap' },
+        { '<leader>u', group = '[U]I Toggles' },
       },
     },
   },
@@ -385,7 +389,7 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         defaults = {
-          path_display = { "smart" }, -- Intelligently shortens paths to show more filename
+          path_display = { 'smart' }, -- Intelligently shortens paths to show more filename
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
@@ -408,10 +412,10 @@ require('lazy').setup({
           find_files = {
             hidden = true,
             file_ignore_patterns = {
-              "^%.git/",        -- Ignore .git directory contents
-              "^%.github/",     -- Ignore .github directory contents  
-              "node_modules/",  -- Ignore node_modules
-              "%.DS_Store$",    -- Ignore .DS_Store files
+              '^%.git/', -- Ignore .git directory contents
+              '^%.github/', -- Ignore .github directory contents
+              'node_modules/', -- Ignore node_modules
+              '%.DS_Store$', -- Ignore .DS_Store files
             },
           },
         },
@@ -567,12 +571,12 @@ require('lazy').setup({
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
           -- Show hover documentation in a small floating window near the cursor
-          map('K', function() 
-            vim.lsp.buf.hover({
+          map('K', function()
+            vim.lsp.buf.hover {
               border = 'rounded',
               max_width = 240,
               max_height = 60,
-            })
+            }
           end, '[K]eyword Hover')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
@@ -589,7 +593,7 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -616,7 +620,7 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
@@ -652,19 +656,45 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
+        taplo = {},
+        gopls = {
+          settings = {
+            gopls = {
+              completeUnimported = true,
+              usePlaceholders = true,
+              staticcheck = true,
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+                nilness = true,
+                unusedwrite = true,
+                useany = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              gofumpt = true,
+            },
+          },
+        },
         pyright = {},
         angularls = {},
         bashls = {},
-  dockerls = {},
-  docker_compose_language_service = {},
-  groovyls = {},
-  jsonls = {},
-  -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
-  marksman = {},
-  terraformls = {},
-  ts_ls = {},
-  yamlls = {},
+        dockerls = {},
+        docker_compose_language_service = {},
+        groovyls = {},
+        jsonls = {},
+        -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
+        marksman = {},
+        terraformls = {},
+        ts_ls = {},
+        yamlls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -712,20 +742,32 @@ require('lazy').setup({
       end
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'goimports',
+        'gofumpt',
+        'golangci-lint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Register per-server overrides via the native Neovim 0.11+ API.
+      --  mason-lspconfig 2.x dropped the `handlers` option: it now just calls
+      --  `vim.lsp.enable()` for every installed server. Anything we want to
+      --  override (settings, capabilities) has to go through `vim.lsp.config`,
+      --  which merges on top of the defaults nvim-lspconfig ships in `lsp/`.
+      --
+      --  `vim.lsp.config('*', ...)` applies to every server, so the cmp
+      --  capabilities are broadcast once rather than per-server.
+      vim.lsp.config('*', { capabilities = capabilities })
+      for server_name, server_opts in pairs(servers) do
+        if next(server_opts) ~= nil then
+          vim.lsp.config(server_name, server_opts)
+        end
+      end
+
       require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        -- Only auto-enable servers listed in `servers` above. Without this,
+        -- every Mason-installed server gets enabled — which is how both
+        -- markdown_oxide and marksman ended up attaching to markdown buffers.
+        automatic_enable = vim.tbl_keys(servers),
       }
     end,
   },
@@ -750,7 +792,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, go = true }
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
@@ -764,6 +806,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'goimports', 'gofumpt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -945,24 +988,6 @@ require('lazy').setup({
       vim.cmd.hi 'Comment gui=none'
     end,
   },
-  --
-  -- { -- You can easily change to a different colorscheme.
-  --   -- Change the name of the colorscheme plugin below, and then
-  --   -- change the command in the config to whatever the name of that colorscheme is.
-  --   --
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',
-  --   priority = 1000, -- Make sure to load this before all the other start plugins.
-  --   init = function()
-  --     -- Load the colorscheme here.
-  --     -- Like many other themes, this one has different styles, and you could load
-  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  --     vim.cmd.colorscheme 'tokyonight-night'
-  --
-  --     -- You can configure highlights by doing something like:
-  --     vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -1024,10 +1049,32 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
-        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
         -- common extras
-        'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'dockerfile', 'git_rebase', 'gitcommit', 'regex',
-        'java', 'go', 'groovy', 'terraform',
+        'javascript',
+        'typescript',
+        'tsx',
+        'json',
+        'yaml',
+        'toml',
+        'dockerfile',
+        'git_rebase',
+        'gitcommit',
+        'regex',
+        'java',
+        'go',
+        'groovy',
+        'terraform',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -1057,7 +1104,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  require 'kickstart.plugins.debug',
+  -- require 'kickstart.plugins.debug',  -- DAP debugging (disabled - not used)
   -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
@@ -1096,6 +1143,11 @@ require('lazy').setup({
     },
   },
 })
+
+-- :GoFormat — manually run goimports + gofumpt on the current Go buffer
+vim.api.nvim_create_user_command('GoFormat', function()
+  require('conform').format { async = true, lsp_format = 'never', formatters = { 'goimports', 'gofumpt' } }
+end, { desc = 'Format Go file with goimports + gofumpt' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
