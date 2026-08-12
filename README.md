@@ -128,7 +128,7 @@ Configured LSP servers for comprehensive language support:
 ### Key Plugins by Category
 
 **🧠 AI & Development:**
-- `yetone/avante.nvim` - AI coding assistant with Claude integration
+- `olimorris/codecompanion.nvim` - AI coding assistant (Kiro via ACP, switchable adapters)
 - `nvim-java/nvim-java` - Advanced Java development environment
 
 **🔍 Navigation & Search:**
