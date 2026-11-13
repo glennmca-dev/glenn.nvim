@@ -6,7 +6,6 @@ A customized Neovim configuration based on kickstart.nvim that is:
 
 * Well-documented
 * Modular plugin structure  
-* AI-enhanced development environment
 * Comprehensive language support
 
 This configuration extends kickstart.nvim with custom plugins and configurations for modern development workflows.
@@ -102,7 +101,6 @@ examples of adding popularly requested plugins.
 This configuration includes 35+ carefully selected plugins organized into categories:
 
 **🚀 Core Features:**
-- **AI-Powered Development**: Avante.nvim with Claude Sonnet 4 integration via Copilot
 - **Advanced LSP**: Mason-managed LSP servers for 10+ languages
 - **Modern UI**: Catppuccin theme, bufferline, floating windows, and enhanced notifications
 - **Smart Search**: Telescope with fuzzy finding and live grep capabilities
@@ -127,8 +125,7 @@ Configured LSP servers for comprehensive language support:
 
 ### Key Plugins by Category
 
-**🧠 AI & Development:**
-- `olimorris/codecompanion.nvim` - AI coding assistant (Kiro via ACP, switchable adapters)
+**🧠 Development:**
 - `nvim-java/nvim-java` - Advanced Java development environment
 
 **🔍 Navigation & Search:**

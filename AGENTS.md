@@ -22,7 +22,6 @@ may appear unusual but are intentional.
 │   └── custom/
 │       ├── plugins/
 │       │   ├── init.lua             # Main custom plugins (Java, snacks, dressing, bufferline, fine-cmdline)
-│       │   ├── codecompanion.lua    # AI assistant (Claude/Kiro/switchable)
 │       │   ├── oil.lua              # File manager (directory editing, `-` to open)
 │       │   ├── nvim-tree.lua        # Project tree (floating, `<C-n>` to toggle)
 │       │   ├── search_highlight.lua # Custom lavender search highlights
@@ -41,19 +40,6 @@ may appear unusual but are intentional.
   native movement keys are already remapped mentally by the user.
 - `<A-w>` cycles windows (instead of a Colemak-conflicting chord).
 - `;` opens fine-cmdline (floating command input) — don't rebind it.
-
-### AI: CodeCompanion.nvim
-- Default adapter: `kiro` (via ACP, runs `kiro-cli acp`)
-- Requires `kiro-cli` installed and on PATH, logged in
-- When Claude is available: change adapter to `anthropic` in codecompanion.lua
-  and set `ANTHROPIC_API_KEY` environment variable
-- Switchable at runtime: `:CodeCompanionChat adapter=copilot`, `adapter=ollama`, etc.
-- CLI interaction: `:CodeCompanionCLI` opens Kiro in a terminal buffer
-- Key bindings under `<leader>a` prefix:
-  - `<leader>ai` — Toggle chat
-  - `<leader>aa` — Actions palette
-  - `<leader>ap` — Inline prompt (visual mode)
-  - `ga` — Add selection to chat (visual mode)
 
 ### File Explorers (Two, intentionally)
 - **oil.nvim**: Directory editor, opened with `-`. Handles `vim .` style opening.
@@ -142,7 +128,7 @@ deprecated in favour of `vim.lsp.config`/`vim.lsp.enable`.
 
 ## Important Notes for Agents
 
-1. **Don't add copilot.vim** — it was intentionally removed
+1. **Don't add in-editor AI plugins** — this config intentionally has none; AI tooling (omp/claude) lives outside nvim
 2. **Don't add DAP plugins** — user explicitly doesn't debug
 3. **Test with `luac -p`** before claiming a file is valid
 4. **Respect the module pattern** — each file in `custom/plugins/` returns a

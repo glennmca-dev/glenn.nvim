@@ -1,5 +1,5 @@
 -- Custom plugins configuration
--- See individual files in this directory for: codecompanion, oil, nvim-tree, xml_change_version
+-- See individual files in this directory for: oil, nvim-tree, xml_change_version
 
 local dash_header = [[
 ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
