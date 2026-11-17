@@ -112,21 +112,34 @@ Configured LSP servers for comprehensive language support:
 
 - **Go** (`gopls`) - Full Go development support
 - **Python** (`pyright`) - Python type checking and intellisense  
-- **JavaScript/TypeScript** (`ts_ls`) - Modern JS/TS development
-- **Java** (`jdtls`) - Enterprise Java with Lombok support
+- **JavaScript/TypeScript** (`ts_ls`, `eslint`) - Modern JS/TS development with linting
 - **Angular** (`angularls`) - Angular framework support
 - **Bash** (`bashls`) - Shell scripting
 - **Docker** (`dockerls`, `docker_compose_language_service`) - Container development
 - **Infrastructure as Code** (`terraformls`) - Terraform support
-- **Groovy** (`groovyls`) - Jenkins/Gradle support  
 - **Configuration Files** (`jsonls`, `yamlls`) - JSON/YAML editing
 - **Documentation** (`marksman`) - Markdown editing
 - **Lua** (`lua_ls`) - Neovim configuration development
 
-### Key Plugins by Category
+Formatting is handled by conform.nvim, running `prettierd`/`prettier` on save
+for JS/TS/JSON/CSS/HTML/YAML/Markdown, and `stylua`/`goimports`+`gofumpt` for
+Lua/Go.
 
-**🧠 Development:**
-- `nvim-java/nvim-java` - Advanced Java development environment
+### Markdown Rendering & Diagrams
+
+Markdown files get a nicer in-buffer display, not just LSP support:
+
+- **render-markdown.nvim** - styled headers, lists, tables, checkboxes, and
+  code block borders/icons, rendered directly in the buffer as you view it.
+- **Code blocks** are syntax-highlighted via normal treesitter language
+  injections (works for any embedded language a parser exists for).
+- **Mermaid/PlantUML/D2 diagrams** in fenced code blocks are rendered as real
+  images inline (not just highlighted text) via `3rd/diagram.nvim` +
+  `3rd/image.nvim`, using the Kitty terminal graphics protocol. Requires
+  `mmdc` (mermaid-cli), `plantuml`, or `d2` on PATH depending on which
+  diagram type you use.
+
+### Key Plugins by Category
 
 **🔍 Navigation & Search:**
 - `nvim-telescope/telescope.nvim` - Fuzzy finder for files, text, and more

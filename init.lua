@@ -694,8 +694,8 @@ require('lazy').setup({
         bashls = {},
         dockerls = {},
         docker_compose_language_service = {},
-        groovyls = {},
         jsonls = {},
+        eslint = {},
         -- Use marksman (widely supported) instead of markdown_oxide to avoid registry/version issues
         marksman = {},
         terraformls = {},
@@ -751,6 +751,7 @@ require('lazy').setup({
         'goimports',
         'gofumpt',
         'golangci-lint',
+        'prettierd',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -817,7 +818,16 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        jsonc = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1050,11 +1060,19 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    -- `main` is required on Neovim 0.12+ (this box runs 0.12.5). `master` is
+    -- upstream-archived and only supported through Nvim 0.11 — on 0.12 its
+    -- bundled markdown injection queries error (`set-lang-from-info-string!`
+    -- directive assumes the old single-node query-match shape), which broke
+    -- code-block language detection for render-markdown.nvim/diagram.nvim.
+    -- `main` is a full rewrite: no more `nvim-treesitter.configs`/opts-style
+    -- setup, no lazy-loading, and highlighting/indent are wired up by hand
+    -- below instead of via `highlight.enable`/`indent.enable`.
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = {
+    config = function()
+      local ensure_installed = {
         'bash',
         'c',
         'diff',
@@ -1077,22 +1095,38 @@ require('lazy').setup({
         'git_rebase',
         'gitcommit',
         'regex',
-        'java',
         'go',
-        'groovy',
         'terraform',
-      },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+      }
+      require('nvim-treesitter').install(ensure_installed)
+
+      -- Some languages depend on vim's regex indent system (such as Ruby) —
+      -- treesitter's indentexpr is skipped for these (was `indent.disable`).
+      local indent_disabled = { ruby = true }
+
+      -- Enables highlighting (`vim.treesitter.start`) and, where not
+      -- disabled above, experimental treesitter indentation for every
+      -- filetype with a parser — installing the parser on first use if it's
+      -- missing (replaces `auto_install = true`).
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('custom-treesitter-start', { clear = true }),
+        callback = function(event)
+          local lang = vim.treesitter.language.get_lang(event.match) or event.match
+          if not pcall(vim.treesitter.language.add, lang) then
+            local ok = pcall(function()
+              require('nvim-treesitter').install(lang):wait(60000)
+            end)
+            if not ok or not pcall(vim.treesitter.language.add, lang) then
+              return
+            end
+          end
+          pcall(vim.treesitter.start, event.buf, lang)
+          if not indent_disabled[event.match] then
+            vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
